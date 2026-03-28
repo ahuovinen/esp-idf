@@ -1,0 +1,38 @@
+{
+    "name": "CachyOS Dev Environment",
+    // MARK: ADDED IMAGE PROPERTY BELOW TO DEFINE THE READABLE TAG NAME
+    "image": "cachyos-esp-dev:latest",
+    // END OF ADDITION
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    // ANTIGRAVITY SPECIFIC FIXES:
+    "updateRemoteUserUID": false,
+    "userEnvProbe": "loginShell",
+    // This tells Antigravity NOT to wrap your Dockerfile in its own helper stages
+    "overrideCommand": true,
+    "remoteUser": "espidf",
+    "customizations": {
+        "antigravity": { // Changed from 'vscode' to 'antigravity'
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "fish"
+            },
+            "extensions": [
+                "bmalehorn.vscode-fish",
+                "ms-vscode.cpptools"
+            ]
+        }
+    },
+    "runArgs": [
+        "--cap-add=SYS_PTRACE",
+        "--security-opt",
+        "seccomp=unconfined",
+        // Descriptive name for docker ps
+        "--name",
+        "cachy-esp-dev"
+    ],
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/espidf/.ssh,type=bind,consistency=cached"
+    ]
+}
